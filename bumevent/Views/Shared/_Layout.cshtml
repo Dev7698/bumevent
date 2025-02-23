@@ -1,0 +1,150 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - bumevent</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/bumevent.styles.css" asp-append-version="true" />
+    <style>
+        .sidebar {
+            background: linear-gradient(180deg, #6f42c1 0%, #0d6efd 100%);
+            min-height: 100vh;
+            width: 280px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            padding: 15px 20px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-logo {
+            width: 1100%; /* Relative to sidebar width */
+            max-width: 2000px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            transition: all 0.3s ease;
+        }
+        .sidebar-header img {
+            max-width: 200px;
+            margin-right: 200px;
+        }
+
+        .sidebar-header h3 {
+            color: white;
+            margin-bottom: 0;
+            font-weight: bold;
+        }
+
+        .nav-link {
+            color: white !important;
+            padding: 15px 25px;
+            border-left: 4px solid transparent;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(255, 255, 255, 0.1);
+            border-left-color: #ffd700;
+        }
+
+        .main-content {
+            margin-left: 280px;
+            transition: all 0.3s;
+        }
+
+        @@media (max-width: 768px) {
+            .sidebar {
+                margin-left: -280px;
+            }
+
+            .sidebar.active {
+                margin-left: 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .navbar-toggler {
+                position: fixed;
+                right: 20px;
+                top: 20px;
+                z-index: 1001;
+            }
+        }
+        media (max-width: 768px) {
+            .sidebar-logo
+
+        {
+            width: 60%;
+            max-width: 180px;
+        }
+
+        }
+
+        media (max-width: 480px) {
+            .sidebar-header
+
+        {
+            padding: 10px 15px;
+        }
+
+        .sidebar-logo {
+            width: 50%;
+            max-width: 160px;
+        }
+
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <img src="~/images/bmu.png" alt="BMU Logo" class="sidebar-logo">
+        </div>
+        <nav class="nav flex-column"> 
+            <a class="nav-link active" asp-controller="" asp-action="Index">Event</a>  
+            <a class="nav-link" asp-controller="" asp-action="Details">Event list</a>
+            <!-- Add more navigation items here --> 
+        </nav>
+    </div>
+
+    <!-- Main Content --> 
+    <div class="main-content">  
+        <!-- Mobile Toggle Button --> 
+        <button class="navbar-toggler btn btn-light" type="button" onclick="toggleSidebar()">
+            <span class="navbar-toggler-icon"></span> 
+        </button>
+
+        <!-- Page Content -->
+        <div class="container-fluid p-4">
+            @RenderBody()
+        </div>
+
+        <footer class="border-top footer text-muted"> 
+            <div class="container">
+                &copy; 2025 - bumevent - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

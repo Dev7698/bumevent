@@ -1,0 +1,233 @@
+﻿@model bumevent.Models.Event
+
+@{
+    ViewData["Title"] = "Create Event";
+}
+
+
+    <style>
+        .form-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-title {
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+            .form-input:focus {
+                outline: none;
+                border-color: #667eea;
+                box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            }
+
+        .textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .file-upload {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .file-input {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-label {
+            background: #667eea;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+            .file-label:hover {
+                background: #5a67d8;
+            }
+
+        .file-name {
+            margin-left: 1rem;
+            color: #718096;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1.5rem;
+        }
+
+            .submit-btn:hover {
+                background: #5a67d8;
+                transform: translateY(-1px);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+        .validation-message {
+            color: #e53e3e;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: block;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        @@media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+
+            .form-title {
+                font-size: 1.5rem;
+            }
+
+        select.form-input {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23667eea' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+            padding-right: 2.5rem;
+        }
+
+            select.form-input:invalid {
+                color: #a0aec0;
+            }
+
+            select.form-input option {
+                color: #2d3748;
+            }
+    </style>
+}
+<div class="form-container">
+    <h2 class="form-title">Create New Event</h2>
+
+    <form asp-action="Index" enctype="multipart/form-data" method="post" class="event-form">
+        <div class="form-grid">
+            <div class="form-group">
+                <label asp-for="EventTitle" class="form-label">Event Title</label>
+                <input asp-for="EventTitle" class="form-input" placeholder="Enter event title" />
+                <span asp-validation-for="EventTitle" class="validation-message"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="EventDate" class="form-label">Event Date</label>
+                <input asp-for="EventDate" type="date" class="form-input" />
+                <span asp-validation-for="EventDate" class="validation-message"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="EventPlace" class="form-label">Venue</label>
+                <input asp-for="EventPlace" class="form-input" placeholder="Enter venue address" />
+                <span asp-validation-for="EventPlace" class="validation-message"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CoordinatorName" class="form-label">Coordinator</label>
+                <input asp-for="CoordinatorName" class="form-input" placeholder="Coordinator's name" />
+                <span asp-validation-for="CoordinatorName" class="validation-message"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="StudentCount" class="form-label">Expected Participants</label>
+                <input asp-for="StudentCount" type="number" class="form-input" placeholder="Number of students" />
+                <span asp-validation-for="StudentCount" class="validation-message"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="DepartmentName" class="form-label">Department</label>
+                <select asp-for="DepartmentName" class="form-input" required>
+                    <option value="">-- Select Department --</option>
+                    <option value="Computer">Computer Engineering</option>
+                    <option value="Mechanical">Mechanical Engineering</option>
+                    <option value="Electrical">Electrical Engineering</option>
+                </select>
+                <span asp-validation-for="DepartmentName" class="validation-message"></span>
+            </div>
+            <div class="form-group full-width">
+                <label asp-for="Objective" class="form-label">Event Objective</label>
+                <textarea asp-for="Objective" class="form-input textarea" rows="4" placeholder="Describe the event purpose"></textarea>
+                <span asp-validation-for="Objective" class="validation-message"></span>
+            </div>
+
+            <div class="form-group full-width">
+                <label class="form-label">Event Image</label>
+                <div class="file-upload">
+                    <input type="file" name="Image" id="Image" class="file-input" />
+                    <label for="Image" class="file-label">Choose File</label>
+                    <span class="file-name">No file chosen</span>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="submit-btn">Create Event</button>
+    </form>
+</div>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" integrity="sha512-s+KjJ44D6gXYu/mnH/KVgrLyKiY6TvWrW5ZY5NFYfxSfc1X+HkuB8tEkVJ4Biqd3l1G5Kl7smqMHLtX+RrdOcw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js" integrity="sha512-GvFck5+gVuNYQZtEHyXm2sWepT+BtPpoZZ4p1s1i7Hrd9ptklUQgm2zjqj1O1zEyM5cw7D/6hPyrO7Q2X+oA5A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+      
+        document.querySelector('.file-input').addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name || 'No file chosen';
+            document.querySelector('.file-name').textContent = fileName;
+        });
+    </script>
+}

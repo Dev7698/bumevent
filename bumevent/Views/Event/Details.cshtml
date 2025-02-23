@@ -1,0 +1,189 @@
+﻿@model bumevent.Models.Event
+
+@{
+    ViewData["Title"] = "Event Details";
+}
+
+<div class="event-details-container">
+    <div class="event-header">
+        <h2 class="event-title">@Model.EventTitle</h2>
+        <div class="event-meta">
+            <span class="event-date">📅 @Model.EventDate.ToShortDateString()</span>
+            <span class="event-department">🏛 @Model.DepartmentName</span>
+        </div>
+    </div>
+
+    <div class="event-content">
+        <div class="details-grid">
+            <div class="detail-item">
+                <span class="detail-label">📍 Location</span>
+                <p class="detail-value">@Model.EventPlace</p>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">👤 Coordinator</span>
+                <p class="detail-value">@Model.CoordinatorName</p>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">🎓 Students Expected</span>
+                <p class="detail-value">@Model.StudentCount</p>
+            </div>
+            <div class="detail-item full-width">
+                <span class="detail-label">📌 Objective</span>
+                <p class="detail-value objective-text">@Model.Objective</p>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.ImagePath))
+        {
+            <div class="event-image">
+                <img src="@Model.ImagePath" alt="Event Image" class="event-img" />
+            </div>
+        }
+
+        <div class="document-actions">
+            <a target="_blank" href="/Event/ViewEvent/@Model.Id" class="action-btn view-btn">👁 View Document</a>
+            <a href="@Url.Action("DownloadDocument", "Event", new { id = Model.Id })">Download Document</a>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .event-details-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .event-header {
+        border-bottom: 2px solid #f0f2f5;
+        padding-bottom: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .event-title {
+        color: #2d3748;
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .event-meta {
+        display: flex;
+        gap: 1.5rem;
+        color: #718096;
+        font-size: 1.1rem; 
+    }
+
+    .details-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .detail-item {
+        background: #f8fafc;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border-left: 4px solid #667eea;
+    }
+
+        .detail-item.full-width {
+            grid-column: 1 / -1;
+        }
+
+    .detail-label {
+        display: block;
+        color: #667eea;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+    }
+
+    .detail-value {
+        color: #2d3748;
+        font-size: 1.1rem;
+        margin: 0;
+    }
+
+    .objective-text {
+        line-height: 1.6;
+        white-space: pre-wrap; 
+    }
+
+    .event-image {
+        margin: 2rem 0;
+        text-align: center; 
+    }
+
+    .event-img {
+        max-width: 30%;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e2e8f0; 
+    }
+
+    .document-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .action-btn {
+        padding: 0.8rem 1.5rem;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .view-btn {
+        background: #667eea;
+        color: white;
+        border: 2px solid #667eea;
+    }
+
+    .download-btn {
+        background: #ffffff;
+        color: #667eea;
+        border: 2px solid #667eea;
+    }
+
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 2px 6px rgba(102, 126, 234, 0.2);
+    }
+
+    @@media (max-width: 768px) {
+        .event-details-container {
+            margin: 1rem;
+            padding: 1.5rem;
+        }
+
+        .event-title {
+            font-size: 2rem;
+        }
+
+        .details-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .document-actions {
+            flex-direction: column;
+        }
+
+        .action-btn {
+            justify-content: center;
+            width: 100%;
+        }
+    }
+</style> 
