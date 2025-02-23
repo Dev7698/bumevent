@@ -53,20 +53,20 @@ namespace bumevent.Controllers
                 {
                     var file = Request.Form.Files[0];
                     string imagesFolder = Path.Combine(_hostEnvironment.WebRootPath, "images");
-                    if (!Directory.Exists(imagesFolder))
-                        Directory.CreateDirectory(imagesFolder);
+                    if (!Directory.Exists(imagesFolder)) 
+                        Directory.CreateDirectory(imagesFolder); 
                     string uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
                     string filePath = Path.Combine(imagesFolder, uniqueFileName);
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {
                         await file.CopyToAsync(stream);
                     }
-                    evnt.ImagePath = "/images/" + uniqueFileName;
+                    evnt.ImagePath = "/images/" + uniqueFileName; 
                 }
 
                 _context.Events.Add(evnt);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Details", new { id = evnt.Id });
+                return RedirectToAction("Details", new { id = evnt.Id }); 
             }
             return View(evnt);
         }
