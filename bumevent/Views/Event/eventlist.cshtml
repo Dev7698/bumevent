@@ -4,16 +4,28 @@
     ViewData["Title"] = "All Events";
 }
 <style>
-    .events-list {
+    .events-container {
         max-width: 1200px;
         margin: 2rem auto;
         padding: 0 1rem;
     }
 
-    .page-title {
-        color: #2d3748;
-        text-align: center;
-        margin-bottom: 2rem;
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .filters {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .search-box, .date-filter, .department-filter {
+        padding: 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 6px;
     }
 
     .event-item {
@@ -55,9 +67,8 @@
 
     .event-title {
         margin: 0;
-        color: #2d3748;
         font-size: 1.25rem;
-        margin-bottom: 0.5rem;
+        color: #2d3748;
     }
 
     .event-date {
@@ -67,17 +78,8 @@
         margin-bottom: 0.5rem;
     }
 
-    .item-meta {
-        display: flex;
-        gap: 1rem;
-        color: #4a5568;
-        font-size: 0.95rem;
-    }
-
     .context-menu {
-        position: relative;
         margin-left: auto;
-        padding-left: 1rem;
     }
 
     .menu-btn {
@@ -87,13 +89,7 @@
         color: #718096;
         cursor: pointer;
         padding: 0.5rem;
-        line-height: 1;
-        transition: all 0.3s ease;
     }
-
-        .menu-btn:hover {
-            color: #2d3748;
-        }
 
     .menu-dropdown {
         display: none;
@@ -116,91 +112,83 @@
         padding: 0.75rem 1rem;
         text-decoration: none;
         color: #4a5568;
-        font-size: 0.95rem;
-        transition: all 0.2s ease;
     }
 
-        .menu-item:hover {
-            background: #f8fafc;
-            color: #667eea;
-        }
+    media (max-width: 768px) {
+        .event-item
 
-    @@media (max-width: 768px) {
-        .event-item {
-            flex-direction: column;
-            align-items: flex-start;
-        }
+    {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 
-        .event-link {
-            width: 100%;
-        }
+    .event-link {
+        width: 100%;
+    }
 
-        .item-image {
-            width: 100%;
-            height: 200px;
-            margin-right: 0;
-            margin-bottom: 1rem;
-        }
+    .item-image {
+        width: 100%;
+        height: 200px;
+        margin-bottom: 1rem;
+    }
 
-        .context-menu {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-        }
     }
 </style>
-<div class="events-list">
-    <h1 class="page-title">All Events</h1>
-    @foreach (var evnt in Model)
-    {
-        <div class="event-item">
-            <!-- Clickable area for event details -->
-            <a href="/Event/Details/@evnt.Id" class="event-link">
-                <img src="@evnt.ImagePath" alt="Event image" class="item-image" />
-                <div class="item-content">
-                    <h3 class="event-title">@evnt.EventTitle</h3>
-                    <span class="event-date">@evnt.EventDate.ToShortDateString()</span>
-                    <div class="item-meta">
-                        <span>🏛 @evnt.DepartmentName</span>
-                        <span>📍 @evnt.EventPlace</span>
+
+<div class="events-container">
+    <div class="header">
+        <h1> Events</h1>
+        <div class="filters">
+            <input type="text" id="searchBox" class="search-box" placeholder="Search events...">
+            <input type="date" id="dateFilter" class="date-filter">
+            <select id="departmentFilter" class="department-filter">
+                <option value="">All Departments</option>
+                <option value="Computer">Computer Engineering</option>
+                <option value="Mechanical">Mechanical Engineering</option>
+                <option value="Electrical">Electrical Engineering</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="eventsList">
+        @foreach (var evnt in Model)
+        {
+            <div class="event-item" data-title="@evnt.EventTitle.ToLower()" data-date="@evnt.EventDate.ToString("yyyy-MM-dd")" data-department="@evnt.DepartmentName.ToLower()">
+                <a href="/Event/Details/@evnt.Id" class="event-link">
+                    <img src="@evnt.ImagePath" alt="Event image" class="item-image" />
+                    <div class="item-content">
+                        <h3 class="event-title">@evnt.EventTitle</h3>
+                        <span class="event-date">@evnt.EventDate.ToShortDateString()</span>
+                    </div>
+                </a>
+                <div class="context-menu">
+                    <button class="menu-btn">⋮</button>
+                    <div class="menu-dropdown">
+                        <a target="_blank" href="/Event/ViewEvent/@evnt.Id" class="menu-item">👁 View Document</a>
+                        <a href="/Event/DownloadDocument/@evnt.Id" class="menu-item">📥 Download Document</a>
                     </div>
                 </div>
-            </a>
-
-            <!-- Context menu (not part of the clickable area) -->
-            <div class="context-menu">
-                <button class="menu-btn">⋮</button>
-                <div class="menu-dropdown">
-                    <a target="_blank" href="/Event/ViewEvent/@evnt.Id" class="menu-item">👁 View Document</a>
-                    <a href="/Event/DownloadDocument/@evnt.Id" class="menu-item">📥 Download Document</a>
-                </div>
             </div>
-        </div>
-    }
-</div> 
-<script>
-    document.querySelectorAll('.menu-btn').forEach(btn => { 
-        btn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const dropdown = this.nextElementSibling;
-            const isVisible = dropdown.classList.contains('show');
-
-            // Close all other dropdowns
-            document.querySelectorAll('.menu-dropdown.show').forEach(d => { 
-                if (d !== dropdown) d.classList.remove('show');
-            });
-
-            // Toggle current dropdown
-            dropdown.classList.toggle('show', !isVisible); 
-        });
-    });
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('.context-menu')) {
-            document.querySelectorAll('.menu-dropdown.show').forEach(d => {
-                d.classList.remove('show');
-            });
         }
-    });
-</script> 
+    </div>
+</div>
 
+<script>
+    function filterEvents() {
+        let query = document.getElementById('searchBox').value.toLowerCase();
+        let date = document.getElementById('dateFilter').value;
+        let department = document.getElementById('departmentFilter').value.toLowerCase();
 
+        document.querySelectorAll('.event-item').forEach(item => {
+            let titleMatch = item.dataset.title.includes(query);
+            let dateMatch = date ? item.dataset.date === date : true;
+            let departmentMatch = department ? item.dataset.department === department : true;
+
+            item.style.display = titleMatch && dateMatch && departmentMatch ? 'flex' : 'none';
+        });
+    }
+
+    document.getElementById('searchBox').addEventListener('input', filterEvents);
+    document.getElementById('dateFilter').addEventListener('change', filterEvents);
+    document.getElementById('departmentFilter').addEventListener('change', filterEvents);
+</script>

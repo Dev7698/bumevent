@@ -44,32 +44,54 @@ namespace bumevent.Controllers
         public async Task<IActionResult> Index(Event evnt)
         {
             // Remove the ModelState entry for ImagePath so it won't block validation.
-            ModelState.Remove("ImagePath"); 
+            ModelState.Remove("ImagePath");
 
-            if (ModelState.IsValid) 
+            if (ModelState.IsValid)
             {
                 // Handle file upload
                 if (Request.Form.Files.Count > 0)
                 {
                     var file = Request.Form.Files[0];
                     string imagesFolder = Path.Combine(_hostEnvironment.WebRootPath, "images");
-                    if (!Directory.Exists(imagesFolder)) 
-                        Directory.CreateDirectory(imagesFolder); 
+                    if (!Directory.Exists(imagesFolder))
+                        Directory.CreateDirectory(imagesFolder);
                     string uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
                     string filePath = Path.Combine(imagesFolder, uniqueFileName);
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {
                         await file.CopyToAsync(stream);
                     }
-                    evnt.ImagePath = "/images/" + uniqueFileName; 
+                    evnt.ImagePath = "/images/" + uniqueFileName;
+                }
+                else
+                {
+                    // If no file was uploaded, set a default image
+                    string defaultImagePath = "/images/bmu.png";
+                    string imagesFolder = Path.Combine(_hostEnvironment.WebRootPath, "images");
+
+                    // Check if the default image exists in the folder, if not, copy it from a source location
+                    string defaultImageSourcePath = Path.Combine(_hostEnvironment.WebRootPath, "default_images", "bmu.png");
+                    string destinationImagePath = Path.Combine(imagesFolder, "bmu.png");
+
+                    if (!Directory.Exists(imagesFolder))
+                        Directory.CreateDirectory(imagesFolder);
+
+                    if (!System.IO.File.Exists(destinationImagePath))
+                    {
+                        
+                        System.IO.File.Copy(defaultImageSourcePath, destinationImagePath);
+                    }
+
+                    evnt.ImagePath = "/images/bmu.png";
                 }
 
                 _context.Events.Add(evnt);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Details", new { id = evnt.Id }); 
+                return RedirectToAction("Details", new { id = evnt.Id });
             }
             return View(evnt);
         }
+
 
 
         // GET: Event/Details/5
