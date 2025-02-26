@@ -60,6 +60,7 @@ namespace bumevent.Controllers
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {
                         await file.CopyToAsync(stream);
+
                     }
                     evnt.ImagePath = "/images/" + uniqueFileName;
                 }

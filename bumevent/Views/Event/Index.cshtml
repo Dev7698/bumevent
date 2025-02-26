@@ -199,8 +199,17 @@
             </div>
             <div class="form-group full-width">
                 <label asp-for="Objective" class="form-label">Event Objective</label>
-                <textarea asp-for="Objective" class="form-input textarea" rows="4" placeholder="Describe the event purpose"></textarea>
+                <textarea id="objectiveInput" asp-for="Objective" class="form-input textarea" rows="4" placeholder="Describe the event purpose"></textarea>
                 <span asp-validation-for="Objective" class="validation-message"></span>
+
+                <!-- AI Generate Button -->
+                <button type="button" id="generateAI" class="btn btn-primary">Generate with AI</button>
+
+                <!-- Loading Indicator -->
+                <div id="loading" style="display: none;">⏳ Generating description...</div>
+
+                <!-- Error Message -->
+                <div id="error-message" style="color: red; display: none;"></div>
             </div>
 
             <div class="form-group full-width">
@@ -229,5 +238,49 @@
             const fileName = e.target.files[0]?.name || 'No file chosen';
             document.querySelector('.file-name').textContent = fileName;
         });
+
+
+
+
+/*         al description
+ */
+                document.getElementById("generateAI").addEventListener("click", async function() {
+            let userInput = document.getElementById("objectiveInput").value.trim();
+            let loadingIndicator = document.getElementById("loading");
+            let errorMessage = document.getElementById("error-message");
+
+            if (userInput.length < 5) {
+                errorMessage.innerText = "Please provide more details to generate a better response.";
+                errorMessage.style.display = "block";
+                return;
+            }
+
+            errorMessage.style.display = "none";
+            loadingIndicator.style.display = "block"; // Show loading
+
+            try {
+                let response = await fetch('/api/generate-description', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userInput })
+                });
+
+                let data = await response.json();
+
+                if (response.ok) {
+                    document.getElementById("objectiveInput").value = data.generatedText;
+                } else {
+                    errorMessage.innerText = data.message || "Failed to generate description.";
+                    errorMessage.style.display = "block";
+                }
+            } catch (error) {
+                errorMessage.innerText = "Error connecting to AI service.";
+                errorMessage.style.display = "block";
+            } finally {
+                loadingIndicator.style.display = "none"; // Hide loading
+            }
+        });
+
+
     </script>
 }

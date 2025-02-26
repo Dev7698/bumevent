@@ -28,4 +28,8 @@ namespace bumevent.Models
 
         public string ImagePath { get; set; }
     }
+    public class UserInputModel
+    {
+        public string UserInput { get; set; }
+    }
 }
