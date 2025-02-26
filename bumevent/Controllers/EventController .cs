@@ -92,11 +92,6 @@ namespace bumevent.Controllers
             }
             return View(evnt);
         }
-
-
-
-        // GET: Event/Details/5
-        // In your EventController.cs
         public async Task<IActionResult> Details(int? id)
         {
             if (id.HasValue)
@@ -169,7 +164,7 @@ namespace bumevent.Controllers
 
                  using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(memStream, true))
                 {
-                    // Replace placeholders with event details
+                  
                     ReplacePlaceholder(wordDoc, "{{EventTitle}}", evnt.EventTitle);
                     ReplacePlaceholder(wordDoc, "{{EventDate}}", evnt.EventDate.ToShortDateString());
                     ReplacePlaceholder(wordDoc, "{{EventPlace}}", evnt.EventPlace);
@@ -188,7 +183,7 @@ namespace bumevent.Controllers
                      wordDoc.MainDocumentPart.Document.Save();
                 }
 
-                // Return the modified document as a downloadable file.
+               
                 return File(memStream.ToArray(),
                             "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
                             "EventDocument.docx");
