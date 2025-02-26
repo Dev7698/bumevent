@@ -25,4 +25,8 @@
     <Folder Include="uploads\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BmuEvent_API\BmuEvent_API.csproj" />
+  </ItemGroup>
+
 </Project>
